@@ -19,7 +19,10 @@ declare global {
 }
 
 export const isRenderer = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('renderer') === 'true';
-export const streamProfile = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('profile') || 'medium' : 'medium';
+export const isCloudflare = typeof window !== 'undefined' && window.location.hostname.includes('pages.dev');
+export const streamProfile = typeof window !== 'undefined' 
+    ? new URLSearchParams(window.location.search).get('profile') || (isCloudflare ? 'low' : 'medium') 
+    : 'medium';
 const socketUrl = isRenderer 
     ? (window.location.protocol + '//' + window.location.hostname + ':7860') 
     : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
