@@ -18,11 +18,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
+      - name: Install dependencies 📦
+        run: npm install
+        
+      - name: Build project 🏗️
+        run: npm run build
+        
       - name: Cloudflare Pages 🚀
         uses: cloudflare/pages-action@1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: 3d-ki-game-cloud
-          directory: public
+          directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
