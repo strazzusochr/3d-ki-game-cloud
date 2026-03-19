@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud 3D KI-Spiel</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; }
+        #cloud-status {
+            position: absolute; 
+            top: 20px; left: 20px;
+            color: #0ff; font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-left: 3px solid #0ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0,255,255,0.2);
+            z-index: 100;
+        }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <div id="cloud-status">Initialisiere Cloudflare CDN...</div>
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Cloud-basierte Dependencies (Unveränderlich) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
+    
+    <script src="main.js"></script>
+</body>
+</html>
