@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { LoopSubdivision } from 'three-subdivide';
-import * as BufferGeometryUtils from 'three-stdlib';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 /**
  * Erstellt eine gemergte BufferGeometry eines Humanoiden für InstancedMesh.
@@ -44,8 +44,7 @@ export function createMergedHumanoidGeometry(lodLevel: number = 0): THREE.Buffer
   geometries.push(rLeg);
 
   // Mergen der Einzelteile zu einer Geometrie für Instancing
-  // @ts-ignore - BufferGeometryUtils aus three-stdlib Export-Handling
-  const merged = BufferGeometryUtils.mergeGeometries(geometries);
+  const merged = mergeGeometries(geometries);
   
   // Ressourcen der Einzel-Geos freigeben
   geometries.forEach(g => g.dispose());
