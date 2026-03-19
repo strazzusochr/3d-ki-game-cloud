@@ -33,7 +33,6 @@ export const InstancedHumanoid: React.FC = () => {
     const lod2Ref = useRef<THREE.InstancedMesh>(null);
     const lod3Ref = useRef<THREE.InstancedMesh>(null);
     const lod4Ref = useRef<THREE.InstancedMesh>(null);
-    const auraRef = useRef<THREE.InstancedMesh>(null);
 
     const refs = useMemo(() => [lod0Ref, lod1Ref, lod2Ref, lod3Ref, lod4Ref], []);
     
@@ -68,17 +67,6 @@ export const InstancedHumanoid: React.FC = () => {
         map: isRendererGlobal ? null : texture,
     }), [texture]);
 
-    const auraGeo = useMemo(() => new THREE.SphereGeometry(0.6, 6, 6), []);
-    const auraMat = useMemo(() => new THREE.MeshBasicMaterial({ 
-        color: '#00ffff',
-        transparent: true,
-        opacity: 0.2,
-        wireframe: true,
-        depthWrite: false, // Verhindert Z-Fighting mit dem Boden
-        polygonOffset: true,
-        polygonOffsetFactor: -1,
-        polygonOffsetUnits: -1
-    }), []);
 
     const frameCounter = useRef(0);
 
@@ -162,14 +150,6 @@ export const InstancedHumanoid: React.FC = () => {
             
             lodCounts[lod]++;
 
-            if (!isRendererGlobal && lod < 2 && auraCount < MAX) {
-                temp.position.set(x, y - 0.5, z);
-                temp.scale.set(1, 0.15, 1);
-                temp.updateMatrix();
-                auraRef.current!.setMatrixAt(auraCount, temp.matrix);
-                auraRef.current!.setColorAt(auraCount, color);
-                auraCount++;
-            }
         }
 
         // Hide unused instances
@@ -183,12 +163,6 @@ export const InstancedHumanoid: React.FC = () => {
             mesh.count = lodCounts[l];
         });
 
-        for (let i = auraCount; i < MAX; i++) {
-            auraRef.current!.setMatrixAt(i, hidden);
-        }
-        auraRef.current.count = auraCount;
-        auraRef.current.instanceMatrix.needsUpdate = true;
-        if (auraRef.current.instanceColor) auraRef.current.instanceColor.needsUpdate = true;
     });
 
     const isRenderer = isRendererGlobal;
@@ -200,7 +174,9 @@ export const InstancedHumanoid: React.FC = () => {
             <instancedMesh ref={lod2Ref} args={[geometries[2], baseMat, MAX]} receiveShadow={!isRenderer} />
             <instancedMesh ref={lod3Ref} args={[geometries[3], baseMat, MAX]} receiveShadow={!isRenderer} />
             <instancedMesh ref={lod4Ref} args={[geometries[4], baseMat, MAX]} receiveShadow={!isRenderer} />
-            <instancedMesh ref={auraRef} args={[auraGeo, auraMat, MAX]} />
+        </>
+    );
+};
         </>
     );
 };
