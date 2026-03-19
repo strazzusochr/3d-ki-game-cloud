@@ -202,7 +202,7 @@ export const HUD = () => {
     const muted = useGameStore(state => state.gameState.muted);
     const interactionState = useGameStore(state => state.interactionState);
     const isVoiceActive = useGameStore(state => state.isVoiceActive);
-    const { advanceHour, rewindHour, advanceMinute, rewindMinute, toggleTimePause, setTimeSpeed, setMasterVolume, setMuted, showStatisticsPanel, dismissStatistics, toggleVoice, initSocket } = useGameStore();
+    const { isZeroFootprint, advanceHour, rewindHour, advanceMinute, rewindMinute, toggleTimePause, setTimeSpeed, setMasterVolume, setMuted, showStatisticsPanel, dismissStatistics, toggleVoice, initSocket } = useGameStore();
 
     // Timeline Scroll Ref
     const timelineRef = useRef<HTMLDivElement>(null);
