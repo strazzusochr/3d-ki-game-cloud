@@ -22,7 +22,7 @@ function createLODGeometry(lod: number): THREE.BufferGeometry {
     return createMergedHumanoidGeometry(lod);
 }
 
-const MAX = 250;
+const MAX = 150; // Drosselung für CPU-Heat-Fix (vorher 250)
 const isRendererGlobal = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('renderer') === 'true';
 
 export const InstancedHumanoid: React.FC = () => {
@@ -83,18 +83,10 @@ export const InstancedHumanoid: React.FC = () => {
                 }
             }
         });
-        if (auraRef.current) {
-            for (let i = 0; i < MAX; i++) {
-                auraRef.current.setColorAt(i, white);
-            }
-            if (auraRef.current.instanceColor) {
-                auraRef.current.instanceColor.needsUpdate = true;
-            }
-        }
     }, [refs]);
 
     useFrame(() => {
-        if (refs.some(r => !r.current) || !auraRef.current) return;
+        if (refs.some(r => !r.current)) return;
         
         frameCounter.current++;
         // 🚀 Cloud-Renderer Update-Rate (alle 60 Frames = absolute CPU Ersparnis)
@@ -106,7 +98,6 @@ export const InstancedHumanoid: React.FC = () => {
         const count = Math.min(npcs.length, MAX);
 
         const lodCounts = [0, 0, 0, 0, 0];
-        let auraCount = 0;
         let lod0Count = 0;
         let lod1Count = 0;
 
@@ -133,8 +124,9 @@ export const InstancedHumanoid: React.FC = () => {
             if (!isRendererGlobal) {
                 if (lod === 0) lod0Count++;
                 if (lod === 1) lod1Count++;
-                if (lod === 0 && lod0Count > 60) lod = 1;
-                if (lod === 1 && lod1Count > 100) lod = 2;
+                // Aggressivere Drosselung für CPU-Heat-Fix
+                if (lod === 0 && lod0Count > 30) lod = 1;
+                if (lod === 1 && lod1Count > 60) lod = 2;
             }
             
             temp.position.set(x, y, z);
