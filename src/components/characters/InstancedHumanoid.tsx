@@ -73,7 +73,11 @@ export const InstancedHumanoid: React.FC = () => {
         color: '#00ffff',
         transparent: true,
         opacity: 0.2,
-        wireframe: true
+        wireframe: true,
+        depthWrite: false, // Verhindert Z-Fighting mit dem Boden
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1
     }), []);
 
     const frameCounter = useRef(0);
