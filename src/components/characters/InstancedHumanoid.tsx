@@ -5,6 +5,7 @@ import { useGameStore } from '../../stores/gameStore';
 import { workerManager } from '../../managers/WorkerManager';
 import { lodManager as lodManagerInstance } from '../../managers/LODManager';
 import { NPC_COLORS } from '../../systems/eventScheduler';
+import { createMergedHumanoidGeometry } from '../../meshes/ProceduralHumanMesh';
 
 /**
  * InstancedHumanoid V4.1 — PERFORMANCE-OVERDRIVE (60 FPS CLOUD FIX)
@@ -17,13 +18,8 @@ Object.entries(NPC_COLORS).forEach(([type, hex]) => {
 const DEFAULT_COLOR = new THREE.Color('#888888');
 
 function createLODGeometry(lod: number): THREE.BufferGeometry {
-    switch (lod) {
-        case 0: return new THREE.CapsuleGeometry(0.15, 1.0, 8, 16);
-        case 1: return new THREE.CapsuleGeometry(0.14, 0.9, 4, 12);
-        case 2: return new THREE.CapsuleGeometry(0.13, 0.8, 3, 8);
-        case 3: return new THREE.CylinderGeometry(0.13, 0.10, 1.6, 6, 1);
-        default: return new THREE.BoxGeometry(0.25, 1.5, 0.2);
-    }
+    // Zurück zum Original-LOD-System: Echte Menschen statt Kapseln!
+    return createMergedHumanoidGeometry(lod);
 }
 
 const MAX = 250;
@@ -135,14 +131,11 @@ export const InstancedHumanoid: React.FC = () => {
             let lod: number;
             const distSq = (x - camera.position.x) ** 2 + (y - camera.position.y) ** 2 + (z - camera.position.z) ** 2;
             
-            if (isRendererGlobal) {
-                if (distSq > 16) lod = 4; // Box über 4m
-                else if (distSq > 4) lod = 3; // Cylinder über 2m
-                else lod = 2; // Low-Poly Capsule nah
-            } else if (doUpdate) {
+            // Auch in der Cloud volle AAA-Qualität für NPCs, wenn nah dran!
+            if (doUpdate) {
                 lod = lodManagerInstance.getLODLevel(Math.sqrt(distSq));
             } else {
-                lod = 2; // Default Low-Poly
+                lod = 2; // Default Standard
             }
 
             if (!isRendererGlobal) {
