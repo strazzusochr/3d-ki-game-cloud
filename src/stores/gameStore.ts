@@ -1385,7 +1385,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     firedEventKeys: [],
     roleTrendHistory: persistedRoleTrendHistory,
     streamProfile,
-    isZeroFootprint: typeof window !== 'undefined' && !window.location.search.includes('renderer=true'), // DEFAULT: Cloud-Only (Hardware Protection)
+    isZeroFootprint: typeof window !== 'undefined' && window.location.search.includes('stream=true'), // Default: Local Rendering (Cloudflare Native)
     isVoiceActive: false,
     remotePlayers: {},
     interactionState: {
@@ -1400,7 +1400,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     },
     gameState: { 
         cloudStreamUrl: 'https://wrzzzrzr-jetbrain.hf.space',
-        isPlaying: false, isTimePaused: false, inGameTime: persistedInGameTime,
+        isPlaying: true, isTimePaused: false, inGameTime: persistedInGameTime,
         tensionLevel: getTensionLevelForMinutes(timeToMinutes(persistedInGameTime)),
         timeSpeed: persistedRuntimeSnapshot?.timeSpeed ?? RUNTIME_DEFAULTS.timeSpeed,
         currentPhaseLabel: '🌅 Tagesbeginn — Stadt erwacht',
@@ -1450,6 +1450,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     initSocket: () => {
         if (socket.connected) return;
+        
+        // Cloudflare Native: No socket connection to old HF space to avoid 400 errors
+        const isCloudflare = typeof window !== 'undefined' && window.location.hostname.includes('pages.dev');
+        if (isCloudflare && !get().isZeroFootprint) {
+            console.log('[Socket] Cloudflare Native Mode: Skipping legacy socket connection.');
+            return;
+        }
+
         socket.connect();
         
         socket.on('init-state', (state: any) => {

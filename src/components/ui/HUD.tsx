@@ -1219,34 +1219,43 @@ export const HUD = () => {
                 <div style={{ height: '36px', width: '2px', background: 'rgba(255,255,255,0.15)', ...bottomOrderStyle(2) }} />
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', pointerEvents: 'auto', background: 'rgba(10,10,10,0.6)', padding: '8px 14px', borderRadius: '12px', backdropFilter: 'blur(5px)', border: '2px solid rgba(255,255,255,0.08)', ...bottomOrderStyle(2) }}>
-                    {([
-                        ['low', 'LOW'],
-                        ['medium', 'MEDIUM'],
-                        ['high', 'HIGH'],
-                        ['aaa', 'AAA 1080p 60 fps']
-                    ] as const).map(([key, label]) => (
-                        <button
-                            key={key}
-                            onClick={() => switchStreamProfile(key)}
-                            disabled={streamProfileLoading === key}
-                            style={{
-                                ...btnStyle,
-                                minWidth: key === 'aaa' ? '146px' : '76px',
-                                padding: '6px 8px',
-                                fontSize: key === 'aaa' ? '11px' : '12px',
-                                color: streamProfile === key ? '#ffcc00' : '#9edfff',
-                                borderColor: streamProfile === key ? 'rgba(255,204,0,0.45)' : 'rgba(255,255,255,0.08)',
-                                boxShadow: streamProfile === key ? '0 0 10px rgba(255,204,0,0.28)' : 'none',
-                                opacity: streamProfileLoading === key ? 0.7 : 1,
-                            }}
-                            title={`Streaming-Profil ${label} aktivieren`}
-                        >
-                            {streamProfileLoading === key ? '...' : label}
-                        </button>
-                    ))}
-                    <span style={{ color: '#9edfff', fontSize: '11px', letterSpacing: '0.4px', marginLeft: '4px' }}>
-                        {streamProfileState.status}
-                    </span>
+                    {!isZeroFootprint ? (
+                        <div style={{ color: '#00ff88', fontSize: '13px', fontWeight: '800', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00ff88', boxShadow: '0 0 8px #00ff88' }}></span>
+                            CLOUDFLARE NATIVE — 60 FPS LOCAL ULTRA
+                        </div>
+                    ) : (
+                        <>
+                            {(([
+                                ['low', 'LOW'],
+                                ['medium', 'MEDIUM'],
+                                ['high', 'HIGH'],
+                                ['aaa', 'AAA 1080p 60 fps']
+                            ] as const).map(([key, label]) => (
+                                <button
+                                    key={key}
+                                    onClick={() => switchStreamProfile(key)}
+                                    disabled={streamProfileLoading === key}
+                                    style={{
+                                        ...btnStyle,
+                                        minWidth: key === 'aaa' ? '146px' : '76px',
+                                        padding: '6px 8px',
+                                        fontSize: key === 'aaa' ? '11px' : '12px',
+                                        color: streamProfile === key ? '#ffcc00' : '#9edfff',
+                                        borderColor: streamProfile === key ? 'rgba(255,204,0,0.45)' : 'rgba(255,255,255,0.08)',
+                                        boxShadow: streamProfile === key ? '0 0 10px rgba(255,204,0,0.28)' : 'none',
+                                        opacity: streamProfileLoading === key ? 0.7 : 1,
+                                    }}
+                                    title={`Streaming-Profil ${label} aktivieren`}
+                                >
+                                    {streamProfileLoading === key ? '...' : label}
+                                </button>
+                            )))}
+                            <span style={{ color: '#9edfff', fontSize: '11px', letterSpacing: '0.4px', marginLeft: '4px' }}>
+                                {streamProfileState.status}
+                            </span>
+                        </>
+                    )}
                 </div>
                 </>
                 )}
