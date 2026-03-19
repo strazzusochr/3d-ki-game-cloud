@@ -2,13 +2,13 @@ import * as THREE from 'three';
 
 export class LODManager {
     private static instance: LODManager;
-    // Aggressivere Verteilung für 60 FPS Cloud-Streaming
-    // LOD 0: < 4m (Ultra-Close)
-    // LOD 1: 4-12m  
-    // LOD 2: 12-30m
-    // LOD 3: 30-70m
-    // LOD 4: > 70m (Box/Impostor)
-    private lodThresholds = [4, 12, 30, 70];
+    // Radikal verschärft für CPU-Heat-Fix (Distanzen halbiert)
+    // LOD 0: < 2m (Ultra-Close)
+    // LOD 1: 2-6m  
+    // LOD 2: 6-15m
+    // LOD 3: 15-40m
+    // LOD 4: > 40m (Box/Impostor)
+    private lodThresholds = [2, 6, 15, 40];
 
     public static getInstance(): LODManager {
         if (!LODManager.instance) {

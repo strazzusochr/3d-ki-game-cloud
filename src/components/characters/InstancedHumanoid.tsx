@@ -22,7 +22,7 @@ function createLODGeometry(lod: number): THREE.BufferGeometry {
     return createMergedHumanoidGeometry(lod);
 }
 
-const MAX = 150; // Drosselung für CPU-Heat-Fix (vorher 250)
+const MAX = 80; // Konsistenz mit MAX_ACTIVE_NPCS (CPU-Heat-Fix)
 const isRendererGlobal = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('renderer') === 'true';
 
 export const InstancedHumanoid: React.FC = () => {
